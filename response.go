@@ -16,10 +16,7 @@ func (r *Response) Parse(fields []interface{}) (err error) {
 }
 
 func (r *Response) WriteTo(w *common.Writer) error {
-	fields := []interface{}{
-		responseName,
-		common.FormatParamList(map[string]string(r.ID)),
-	}
+	fields := []interface{}{responseName, formatID(r.ID)}
 
 	res := common.NewUntaggedResp(fields)
 	return res.WriteTo(w)

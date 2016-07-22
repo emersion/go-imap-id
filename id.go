@@ -69,3 +69,10 @@ func parseID(fields []interface{}) (id ID, err error) {
 	}
 	return
 }
+
+func formatID(id ID) interface{} {
+	if id == nil {
+		return nil
+	}
+	return common.FormatParamList(map[string]string(id))
+}

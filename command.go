@@ -13,9 +13,7 @@ type Command struct {
 func (cmd *Command) Command() *common.Command {
 	return &common.Command{
 		Name: commandName,
-		Arguments: []interface{}{
-			common.FormatParamList(map[string]string(cmd.ID)),
-		},
+		Arguments: []interface{}{formatID(cmd.ID)},
 	}
 }
 
