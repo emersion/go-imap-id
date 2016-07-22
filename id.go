@@ -43,7 +43,7 @@ const (
 	// Arguments supplied on the command line, if any.
 	FieldArguments = "arguments"
 	// Description of environment, i.e., UNIX environment variables or Windows
-	// registry settings.\]
+	// registry settings.
 	FieldEnvironment = "environment"
 )
 
