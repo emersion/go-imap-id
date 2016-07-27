@@ -13,7 +13,9 @@ type Handler struct {
 }
 
 func (hdlr *Handler) Handle(conn *server.Conn) error {
-	hdlr.gotID(conn, hdlr.Command.ID)
+	if hdlr.gotID != nil {
+		hdlr.gotID(conn, hdlr.Command.ID)
+	}
 
 	res := &Response{hdlr.serverID}
 	return conn.WriteResp(res)
