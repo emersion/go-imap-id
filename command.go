@@ -1,7 +1,7 @@
 package id
 
 import (
-	"github.com/emersion/go-imap/common"
+	"github.com/emersion/go-imap"
 )
 
 // An ID command.
@@ -10,9 +10,9 @@ type Command struct {
 	ID ID
 }
 
-func (cmd *Command) Command() *common.Command {
-	return &common.Command{
-		Name: commandName,
+func (cmd *Command) Command() *imap.Command {
+	return &imap.Command{
+		Name:      commandName,
 		Arguments: []interface{}{formatID(cmd.ID)},
 	}
 }

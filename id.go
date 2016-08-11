@@ -4,14 +4,14 @@ package id
 import (
 	"errors"
 
-	"github.com/emersion/go-imap/common"
+	"github.com/emersion/go-imap"
 )
 
 // The ID capability.
 const Capability = "ID"
 
 const (
-	commandName = Capability
+	commandName  = Capability
 	responseName = Capability
 )
 
@@ -64,7 +64,7 @@ func parseID(fields []interface{}) (id ID, err error) {
 	}
 
 	var params map[string]string
-	if params, err = common.ParseParamList(list); err == nil {
+	if params, err = imap.ParseParamList(list); err == nil {
 		id = ID(params)
 	}
 	return
@@ -74,5 +74,5 @@ func formatID(id ID) interface{} {
 	if id == nil {
 		return nil
 	}
-	return common.FormatParamList(map[string]string(id))
+	return imap.FormatParamList(map[string]string(id))
 }

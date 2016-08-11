@@ -1,33 +1,66 @@
 package id
 
 import (
-	"github.com/emersion/go-imap/common"
+	"github.com/emersion/go-imap"
 	"github.com/emersion/go-imap/server"
 )
+
+type Conn interface {
+	ID() ID
+
+	setID(id ID)
+}
+
+type conn struct {
+	server.Conn
+
+	id ID
+}
+
+func (conn *conn) ID() ID {
+	return conn.id
+}
+
+func (conn *conn) setID(id ID) {
+	conn.id = id
+}
 
 type Handler struct {
 	Command
 
-	serverID ID
-	gotID func(conn *server.Conn, id ID)
+	ext *extension
 }
 
-func (hdlr *Handler) Handle(conn *server.Conn) error {
-	if hdlr.gotID != nil {
-		hdlr.gotID(conn, hdlr.Command.ID)
+func (hdlr *Handler) Handle(conn server.Conn) error {
+	if conn, ok := conn.(Conn); ok {
+		conn.setID(hdlr.Command.ID)
 	}
 
-	res := &Response{hdlr.serverID}
-	return conn.WriteResp(res)
+	return conn.WriteResp(&Response{hdlr.ext.serverID})
 }
 
-// NewServer enables the ID extension on an IMAP server. id is the server ID, it
-// can be nil. gotID is a function that will be called when a client sends its
-// own ID.
-func NewServer(s *server.Server, id ID, gotID func(conn *server.Conn, id ID)) {
-	s.RegisterCapability(Capability, common.ConnectedState)
+type extension struct {
+	serverID ID
+}
 
-	s.RegisterCommand(commandName, func() server.Handler {
-		return &Handler{serverID: id, gotID: gotID}
-	})
+func (ext *extension) Capabilities(state imap.ConnState) []string {
+	return []string{Capability}
+}
+
+func (ext *extension) Command(name string) server.HandlerFactory {
+	if name != commandName {
+		return nil
+	}
+
+	return func() server.Handler {
+		return &Handler{ext: ext}
+	}
+}
+
+func (ext *extension) NewConn(c server.Conn) server.Conn {
+	return &conn{Conn: c}
+}
+
+func NewExtension(serverID ID) server.Extension {
+	return &extension{serverID}
 }

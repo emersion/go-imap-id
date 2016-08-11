@@ -1,7 +1,7 @@
 package id
 
 import (
-	"github.com/emersion/go-imap/common"
+	"github.com/emersion/go-imap"
 )
 
 // An ID response.
@@ -15,9 +15,9 @@ func (r *Response) Parse(fields []interface{}) (err error) {
 	return
 }
 
-func (r *Response) WriteTo(w *common.Writer) error {
+func (r *Response) WriteTo(w imap.Writer) error {
 	fields := []interface{}{responseName, formatID(r.ID)}
 
-	res := common.NewUntaggedResp(fields)
+	res := imap.NewUntaggedResp(fields)
 	return res.WriteTo(w)
 }
