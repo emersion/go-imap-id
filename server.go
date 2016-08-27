@@ -1,7 +1,6 @@
 package id
 
 import (
-	"github.com/emersion/go-imap"
 	"github.com/emersion/go-imap/server"
 )
 
@@ -43,7 +42,7 @@ type extension struct {
 	serverID ID
 }
 
-func (ext *extension) Capabilities(state imap.ConnState) []string {
+func (ext *extension) Capabilities(c server.Conn) []string {
 	return []string{Capability}
 }
 
