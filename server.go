@@ -4,6 +4,10 @@ import (
 	"github.com/emersion/go-imap/server"
 )
 
+type User interface {
+	SetClientID(id ID)
+}
+
 type Conn interface {
 	ID() ID
 
@@ -33,6 +37,10 @@ type Handler struct {
 func (hdlr *Handler) Handle(conn server.Conn) error {
 	if conn, ok := conn.(Conn); ok {
 		conn.setID(hdlr.Command.ID)
+	}
+
+	if user, ok := conn.Context().User.(User); ok {
+		user.SetClientID(hdlr.Command.ID)
 	}
 
 	return conn.WriteResp(&Response{hdlr.ext.serverID})
