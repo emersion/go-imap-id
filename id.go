@@ -74,5 +74,5 @@ func formatID(id ID) interface{} {
 	if id == nil {
 		return nil
 	}
-	return imap.FormatParamList(map[string]string(id))
+	return imap.FormatParamListQuoted(map[string]string(id))
 }
