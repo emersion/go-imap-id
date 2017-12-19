@@ -35,9 +35,13 @@ type Handler struct {
 }
 
 func (hdlr *Handler) Handle(conn server.Conn) error {
-	if conn, ok := conn.(Conn); ok {
-		conn.setID(hdlr.Command.ID)
-	}
+	conn.Server().ForEachConn(func(extended server.Conn) {
+		if extended.Context() == conn.Context() {
+			if connId, ok := extended.(Conn); ok {
+				connId.setID(hdlr.Command.ID)
+			}
+		}
+	})
 
 	if user, ok := conn.Context().User.(User); ok {
 		user.SetClientID(hdlr.Command.ID)
