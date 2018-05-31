@@ -21,7 +21,8 @@ func (c *Client) SupportID() (bool, error) {
 	return c.c.Support(Capability)
 }
 
-func (c *Client) id(clientID ID) (serverID ID, err error) {
+// ID sends an ID command to the server and returns the server's ID.
+func (c *Client) ID(clientID ID) (serverID ID, err error) {
 	if state := c.c.State(); imap.ConnectedState&state != state {
 		return nil, errors.New("Not connected")
 	}
@@ -40,9 +41,4 @@ func (c *Client) id(clientID ID) (serverID ID, err error) {
 	serverID = res.ID
 
 	return
-}
-
-// ID sends an ID string to the server and returns the server's ID.
-func (c *Client) ID(clientID ID) (serverID ID, err error) {
-	return c.id(clientID)
 }
